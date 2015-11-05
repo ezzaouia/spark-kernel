@@ -11,4 +11,5 @@ scratch/
 **/*ivy.xml
 test-output/
 out/
+dist/
 

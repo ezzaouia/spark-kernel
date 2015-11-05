@@ -27,10 +27,11 @@ IP?=0.0.0.0
 
 clean:
 	vagrant ssh -c "cd /src/spark-kernel/ && sbt clean"
+	@-rm -r dist
 
-kernel/target/pack/bin/sparkkernel: vagrantup ${shell find ./*/src/main/**/*}
+kernel/target/pack/bin/sparkkernel: ${shell find ./*/src/main/**/*}
 	vagrant ssh -c "cd /src/spark-kernel/ && sbt compile && sbt pack"
-	vagrant ssh -c "cd /src/spark-kernel/kernel/target/pack && make install"
+	vagrant ssh -c "cd /src/spark-kernel/kernel/target/pack"
 
 build-image: IMAGE_NAME?cloudet/spark-kernel
 build-image: CACHE?=""
@@ -60,8 +61,14 @@ vagrantup:
 
 build: kernel/target/pack/bin/sparkkernel
 
-dev: build
+dev: dist
 	vagrant ssh -c "cd ~ && ipython notebook --ip=* --no-browser"
 
 test: build
 	vagrant ssh -c "cd /src/spark-kernel/ && sbt test"
+
+dist: build
+	@mkdir -p dist/spark-kernel
+	@cp -r etc/bin dist/spark-kernel/bin
+	@cp -r kernel/target/pack/lib dist/spark-kernel/lib
+	-@rm dist/spark-kernel/lib/jackson-*

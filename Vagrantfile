@@ -122,7 +122,7 @@ cat << EOF > /home/vagrant/.ipython/kernels/spark/kernel.json
     "display_name": "Spark 1.5.1 (Scala 2.10.4)",
     "language_info": { "name": "scala" },
     "argv": [
-        "/home/vagrant/local/bin/sparkkernel",
+        "/src/spark-kernel/dist/spark-kernel/bin/spark-kernel",
         "--profile",
         "{connection_file}"
     ],
