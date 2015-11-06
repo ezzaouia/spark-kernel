@@ -74,7 +74,10 @@ class ExecuteRequestHandler(
         (executeRequest, km, outputStream)
       ).mapTo[(ExecuteReply, ExecuteResult)]
 
-      executeFuture andThen {
+      executeFuture map { case result =>
+        outputStream.flush()
+        result
+      } andThen {
         case Success(tuple) =>
           val (executeReply, executeResult) = updateCount(tuple, executionCount)
 
